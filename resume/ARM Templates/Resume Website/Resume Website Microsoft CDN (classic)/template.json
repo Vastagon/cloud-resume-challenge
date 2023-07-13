@@ -31,7 +31,7 @@
                 "[resourceId('Microsoft.Cdn/profiles', parameters('profiles_ResumeWebsiteCDN_name'))]"
             ],
             "properties": {
-                "originHostHeader": "vastagonresumewebsite.z19.web.core.windows.net",
+                "originHostHeader": "vastagonresumewebsite.z13.web.core.windows.net",
                 "contentTypesToCompress": [
                     "application/eot",
                     "application/font",
@@ -84,8 +84,8 @@
                     {
                         "name": "vastagonresumewebsite-z19-web-core-windows-net",
                         "properties": {
-                            "hostName": "vastagonresumewebsite.z19.web.core.windows.net",
-                            "originHostHeader": "vastagonresumewebsite.z19.web.core.windows.net",
+                            "hostName": "vastagonresumewebsite.z13.web.core.windows.net",
+                            "originHostHeader": "vastagonresumewebsite.z13.web.core.windows.net",
                             "priority": 1,
                             "weight": 1000,
                             "enabled": true
@@ -105,8 +105,8 @@
                 "[resourceId('Microsoft.Cdn/profiles', parameters('profiles_ResumeWebsiteCDN_name'))]"
             ],
             "properties": {
-                "hostName": "vastagonresumewebsite.z19.web.core.windows.net",
-                "originHostHeader": "vastagonresumewebsite.z19.web.core.windows.net",
+                "hostName": "vastagonresumewebsite.z13.web.core.windows.net",
+                "originHostHeader": "vastagonresumewebsite.z13.web.core.windows.net",
                 "priority": 1,
                 "weight": 1000,
                 "enabled": true

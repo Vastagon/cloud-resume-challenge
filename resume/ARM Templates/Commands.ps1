@@ -46,8 +46,3 @@ az deployment group create --resource-group $rg --template-file ".\Resume Websit
 
 
 
-
-
-az storage blob upload-batch --account-name vastagonresumewebsite --auth-mode key -d '$web' -s ./resume --auth-mode login --overwrite
-
-az storage blob upload-batch --account-name vastagonresumewebsite --auth-mode key -d '$web' -s ./resume --overwrite
