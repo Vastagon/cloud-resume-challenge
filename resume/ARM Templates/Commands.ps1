@@ -2,6 +2,8 @@
 $rg = ResumeWebsite
 $websiteStorageName = vastagonresumewebsite
 
+./node_modules/.bin/cypress open
+
 ### Check set Subscription
 # az account show --output table
 ### Change active Subscription

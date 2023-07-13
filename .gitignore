@@ -1,3 +1,4 @@
 .venv
 azcopy.exe
 PersonalStuff.txt
+node_modules
