@@ -43,3 +43,11 @@ Enable-AzStorageStaticWebsite -IndexDocument "resume.html";
 
 az deployment group create --resource-group $rg --template-file ".\Resume Website\Resume Website Microsoft CDN (classic)\template.json";
 
+
+
+
+
+
+az storage blob upload-batch --account-name vastagonresumewebsite --auth-mode key -d '$web' -s ./resume --auth-mode login --overwrite
+
+az storage blob upload-batch --account-name vastagonresumewebsite --auth-mode key -d '$web' -s ./resume --overwrite
