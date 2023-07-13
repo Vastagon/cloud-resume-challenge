@@ -38,8 +38,8 @@ az deployment group create --resource-group $rg --template-file ".\Resume Websit
 Set-AzCurrentStorageAccount -ResourceGroupName $rg -Name $websiteStorageName;
 Enable-AzStorageStaticWebsite -IndexDocument "resume.html";
 
-./azcopy copy "../resume.html" "https://vastagonresumewebsite.blob.core.windows.net/%24web";
-./azcopy copy "../resume.css" "https://vastagonresumewebsite.blob.core.windows.net/%24web";
+./azcopy copy "../Resume Code/resume.html" "https://vastagonresumewebsite.blob.core.windows.net/%24web";
+./azcopy copy "../Resume Code/resume.css" "https://vastagonresumewebsite.blob.core.windows.net/%24web";
 
 az deployment group create --resource-group $rg --template-file ".\Resume Website\Resume Website Microsoft CDN (classic)\template.json";
 
