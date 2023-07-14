@@ -9,3 +9,5 @@ def main(req: func.HttpRequest, inputDocument: func.DocumentList):
 
         totalCount['count'] = updatedCount
         return totalCount
+    else:
+        return func.Document.from_dict({"id": "count", "count": 0})

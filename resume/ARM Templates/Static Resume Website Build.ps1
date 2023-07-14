@@ -8,6 +8,7 @@ $websiteStorageName = vastagonresumewebsite
 # az account show --output table
 ### Change active Subscription
 # az account set --subscription "Pay as you go Production"
+# Set-AzContext -Subscription "Pay as you go Development"
 
 ### Deploy Resume Website Resource Group
 az group create --name $rg --location eastus
