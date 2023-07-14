@@ -1,0 +1,14 @@
+$rg = "ResumeWebsite";
+az ad sp create-for-rbac --name "vastagonresumewebsite" --role contributor --scopes /subscriptions/80933261-c3f5-49e7-a03a-d7ae6b87e235/resourceGroups/$rg --sdk-auth
+
+
+# az ad sp create-for-rbac --name "vastagonresumewebsite" --role contributor --scopes /subscriptions/80933261-c3f5-49e7-a03a-d7ae6b87e235/resourceGroups/$rg --sdk-auth
+
+# az storage blob upload-batch --account-name vastagonresumewebsite --auth-mode key -d '$web' -s .
+
+# az cdn endpoint purge --content-paths  "/*" --profile-name "ResumeWebsiteCDN" --name "vastagon" --resource-group "ResumeWebsite"
+
+
+az storage blob upload-batch --account-name vastagonresumewebsite --auth-mode key -d '$web' -s ./resume --auth-mode login --overwrite
+
+az storage blob upload-batch --account-name vastagonresumewebsite --auth-mode key -d '$web' -s ./resume --overwrite
