@@ -1,6 +1,5 @@
 $rg = "ResumeWebsiteAPI";
 $websiteStorageName = "vastagonresumewebsite";
-$rg = "ResumeWebsiteAPI";
 $accountName = "resumecosmosvastagon"
 
 # Create API resource group
@@ -12,18 +11,15 @@ az group create --name $rg --location eastus;
 az deployment group create --resource-group $rg --template-file ".\CosmosDB\template.json";
 
 # Create Function App with in binding to increase the counter stored in NoSQL CosmosDB
+# az deployment group create --resource-group ResumeWebsiteAPI --template-file ".\Azure Functions\template.json" --parameters ".\Azure Functions\parameters.json"
+### CREATE THE FUNCTION APP YOURSELF USING THE CODE IN InputTrigger. Make sure CORS only works with the website's URI
 
-
-
-
-
-
-# Get the connection string on newly created CosmosDB
 
 # Fix the context and locations when I can actually put things where I want them after throttle is over
-Set-AzContext -Subscription "Pay as you go Production"
 
+## Updates FunctionAppSetting for the connection string
+$accountName = "resumecosmosvastagon"
 $cosmosDBConnectionString = (Get-AzCosmosDBAccountKey -ResourceGroupName $rg -Name $accountName -Type "ConnectionStrings")."Primary SQL Connection String"
-# Updates FunctionAppSetting for the connection string
-Set-AzContext -Subscription "Pay as you go Development"
-Update-AzFunctionAppSetting -Name "testvastagon" -ResourceGroupName "test" -AppSetting @{"CosmosDbConnectionString" = $cosmosDBConnectionString}
+Update-AzFunctionAppSetting -Name "vastagonresumecountapi" -ResourceGroupName $rg -AppSetting @{"CosmosDbConnectionString" = $cosmosDBConnectionString }
+
+

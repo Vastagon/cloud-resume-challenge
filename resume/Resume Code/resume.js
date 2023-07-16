@@ -1,5 +1,5 @@
 async function updateCounter() {
-    const res = await fetch("https://testvastagon.azurewebsites.net/api/UpdateVisitCount?code=uifBbZ-fr_caR0rmfq2omVvHQfPcSs__w2V_IsU7FCWJAzFuT77olw==", {
+    const res = await fetch("https://vastagonresumecountapi.azurewebsites.net/api/UpdateVisitCount?code=vkWbdknVU5eE-hHjIGv3-_SYny77exqri0dlogICMPJFAzFuXX7YCg==", {
         method: "POST"
     })
     const data = await res.json()
