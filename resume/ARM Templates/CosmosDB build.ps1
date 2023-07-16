@@ -23,3 +23,7 @@ $cosmosDBConnectionString = (Get-AzCosmosDBAccountKey -ResourceGroupName $rg -Na
 Update-AzFunctionAppSetting -Name "vastagonresumecountapi" -ResourceGroupName $rg -AppSetting @{"CosmosDbConnectionString" = $cosmosDBConnectionString }
 
 
+# Alert rules and groups
+### CREATE NEW TEMPLATES WHEN NO LONGER BEING THROTTLED
+New-AzResourceGroupDeployment -ResourceGroupName $rg -TemplateFile ".\Monitoring\APIActionGroup\template.json"
+New-AzResourceGroupDeployment -ResourceGroupName $rg -TemplateFile ".\Monitoring\API Latency\template.json"

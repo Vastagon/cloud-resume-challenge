@@ -1,0 +1,64 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "metricAlerts_Resume_Website_Function_API_Latency_name": {
+            "defaultValue": "Resume Website Function API Latency",
+            "type": "String"
+        },
+        "sites_vastagonresumecountapi_externalid": {
+            "defaultValue": "/subscriptions/80933261-c3f5-49e7-a03a-d7ae6b87e235/resourceGroups/ResumeWebsiteAPI/providers/Microsoft.Web/sites/vastagonresumecountapi",
+            "type": "String"
+        },
+        "actiongroups_resumeapiactiongroup_externalid": {
+            "defaultValue": "/subscriptions/80933261-c3f5-49e7-a03a-d7ae6b87e235/resourceGroups/resumewebsiteapi/providers/microsoft.insights/actiongroups/resumeapiactiongroup",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "microsoft.insights/metricAlerts",
+            "apiVersion": "2018-03-01",
+            "name": "[parameters('metricAlerts_Resume_Website_Function_API_Latency_name')]",
+            "location": "global",
+            "properties": {
+                "severity": 2,
+                "enabled": true,
+                "scopes": [
+                    "[parameters('sites_vastagonresumecountapi_externalid')]"
+                ],
+                "evaluationFrequency": "PT30M",
+                "windowSize": "PT1H",
+                "criteria": {
+                    "allOf": [
+                        {
+                            "alertSensitivity": "Medium",
+                            "failingPeriods": {
+                                "numberOfEvaluationPeriods": 4,
+                                "minFailingPeriodsToAlert": 4
+                            },
+                            "name": "Metric1",
+                            "metricNamespace": "Microsoft.Web/sites",
+                            "metricName": "HttpResponseTime",
+                            "operator": "GreaterOrLessThan",
+                            "timeAggregation": "Average",
+                            "skipMetricValidation": false,
+                            "criterionType": "DynamicThresholdCriterion"
+                        }
+                    ],
+                    "odata.type": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria"
+                },
+                "autoMitigate": true,
+                "targetResourceType": "Microsoft.Web/sites",
+                "targetResourceRegion": "eastus2",
+                "actions": [
+                    {
+                        "actionGroupId": "[parameters('actiongroups_resumeapiactiongroup_externalid')]",
+                        "webHookProperties": {}
+                    }
+                ]
+            }
+        }
+    ]
+}

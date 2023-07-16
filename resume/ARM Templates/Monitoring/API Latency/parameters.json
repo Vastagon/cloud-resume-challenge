@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "metricAlerts_Resume_Website_Function_API_Latency_name": {
+            "value": null
+        },
+        "sites_vastagonresumecountapi_externalid": {
+            "value": null
+        },
+        "actiongroups_resumeapiactiongroup_externalid": {
+            "value": null
+        }
+    }
+}
