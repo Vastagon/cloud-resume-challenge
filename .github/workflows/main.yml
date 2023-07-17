@@ -17,14 +17,10 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          $rg = "ResumeWebsite";
-          $websiteTestingStorageName = "testresumevastagon";
-          az deployment group create --resource-group $rg --template-file ".\Resume Website\Resume Website Storage Account\template.json" --parameters ".\Resume Website\Resume Website Storage Account\testingparameters.json";
-          # Enabling static website
-          Set-AzCurrentStorageAccount -ResourceGroupName $rg -Name $websiteTestingStorageName;
+          az deployment group create --resource-group ResumeWebsite --template-file ".\Resume Website\Resume Website Storage Account\template.json" --parameters ".\Resume Website\Resume Website Storage Account\testingparameters.json";
+          Set-AzCurrentStorageAccount -ResourceGroupName ResumeWebsite -Name testresumevastagon;
           Enable-AzStorageStaticWebsite -IndexDocument "resume.html";
-          # Adding files
-          az storage blob upload-batch --account-name $websiteTestingStorageName --auth-mode key -d '$web' -s "./resume/Resume Code" --overwrite
+          az storage blob upload-batch --account-name testresumevastagon --auth-mode key -d '$web' -s "./resume/Resume Code" --overwrite
         
 
 
@@ -63,7 +59,7 @@ jobs:
 
   # Uploads the html, CSS, and JS to the public $web container
   build:
-    needs: cypress-run
+    needs: [cypress-run, create-temp-website]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
