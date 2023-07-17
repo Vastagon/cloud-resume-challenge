@@ -24,9 +24,21 @@ jobs:
       with:
         inlineScript: |
             az cdn endpoint purge --content-paths  "/*" --profile-name "ResumeWebsiteCDN" --name "vastagon" --resource-group "ResumeWebsite"
-           
+
+  
 # Azure logout
     - name: logout
       run: |
           az logout
     if: always()
+
+# Running E2E Cypress tests
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
