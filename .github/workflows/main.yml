@@ -5,9 +5,33 @@ on:
         branches: [ master ]
 
 jobs:
+  create-temp-website:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: azure/login@v1
+      with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Creating temp website
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          $rg = "ResumeWebsite";
+          $websiteTestingStorageName = "testresumevastagon";
+          az deployment group create --resource-group $rg --template-file ".\Resume Website\Resume Website Storage Account\template.json" --parameters ".\Resume Website\Resume Website Storage Account\testingparameters.json";
+          # Enabling static website
+          Set-AzCurrentStorageAccount -ResourceGroupName $rg -Name $websiteTestingStorageName;
+          Enable-AzStorageStaticWebsite -IndexDocument "resume.html";
+          # Adding files
+          az storage blob upload-batch --account-name $websiteTestingStorageName --auth-mode key -d '$web' -s "./resume/Resume Code" --overwrite
+        
+
+
 
   # Running E2E Cypress tests
   cypress-run:
+    needs: create-temp-website
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -18,7 +42,28 @@ jobs:
         uses: cypress-io/github-action@v5
 
 
+
+
+  delete-temp-website:
+    needs: cypress-run
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: azure/login@v1
+      with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Delete testresumevastagon storage account
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az storage account delete --name testresumevastagon --resource-group ResumeWebsite
+      
+
+
+  # Uploads the html, CSS, and JS to the public $web container
   build:
+    needs: cypress-run
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3

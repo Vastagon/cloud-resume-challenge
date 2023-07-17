@@ -48,4 +48,17 @@ az deployment group create --resource-group $rg --template-file ".\Resume Websit
 
 
 
+### Creating temporary website for testing
+$rg = "ResumeWebsite";
+$websiteTestingStorageName = "testresumevastagon";
+az deployment group create --resource-group $rg --template-file ".\Resume Website\Resume Website Storage Account\template.json" --parameters ".\Resume Website\Resume Website Storage Account\testingparameters.json";
+# Enabling static website
+Set-AzCurrentStorageAccount -ResourceGroupName $rg -Name $websiteTestingStorageName;
+Enable-AzStorageStaticWebsite -IndexDocument "resume.html";
+# Adding files
+az storage blob upload-batch --account-name $websiteTestingStorageName --auth-mode key -d '$web' -s "./resume/Resume Code" --overwrite
 
+### Run the tests on: https://testresumevastagon.z13.web.core.windows.net/
+
+# Delete temp website
+az storage account delete --name $websiteTestingStorageName --resource-group $rg

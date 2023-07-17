@@ -2,7 +2,7 @@
 
 describe("My awesome website", () => {
     beforeEach(() => {
-        cy.visit("http://127.0.0.1:5500/resume/Resume%20Code/resume.html")
+        cy.visit("https://testresumevastagon.z13.web.core.windows.net/")
     })
 
     it("Has my name as the title", () => {
