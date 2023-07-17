@@ -5,8 +5,8 @@ on:
         branches: [ master ]
 
 jobs:
-  create-temp-website:
-    runs-on: ubuntu-latest
+  cypress-tests:
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     - uses: azure/login@v1
@@ -20,46 +20,26 @@ jobs:
           az deployment group create --resource-group ResumeWebsite --template-file "./resume/ARM Templates/Resume Website/Resume Website Storage Account/template.json" --parameters "./resume/ARM Templates/Resume Website/Resume Website Storage Account/testingparameters.json";
           az storage blob service-properties update --account-name testresumevastagon --static-website --index-document resume.html
           az storage blob upload-batch --account-name testresumevastagon --auth-mode key -d '$web' -s "./resume/Resume Code" --overwrite
-        
 
-
-
-  # Running E2E Cypress tests
-  cypress-run:
-    needs: create-temp-website
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
       # Install npm dependencies, cache them correctly
       # and run all Cypress tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v5
-
-
-
-
-  delete-temp-website:
-    needs: cypress-run
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: azure/login@v1
-      with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
+    - name: Cypress run
+      uses: cypress-io/github-action@v5
+        
     - name: Delete testresumevastagon storage account
       uses: azure/CLI@v1
       with:
         inlineScript: |
           az storage account delete --name testresumevastagon --resource-group ResumeWebsite --yes
-      
+
 
 
   # Uploads the html, CSS, and JS to the public $web container
-  build_public_resume_website:
-    needs: [cypress-run, create-temp-website]
-    runs-on: ubuntu-latest
+  build:
+    needs: cypress-tests
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     - uses: azure/login@v1
