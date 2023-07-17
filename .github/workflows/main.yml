@@ -17,7 +17,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          az deployment group create --resource-group ResumeWebsite --template-file ".\Resume Website\Resume Website Storage Account\template.json" --parameters ".\Resume Website\Resume Website Storage Account\testingparameters.json";
+          az deployment group create --resource-group ResumeWebsite --template-file ".\Resume Website\Resume Website Storage Account\testingparameters.json" --parameters ".\Resume Website\Resume Website Storage Account\testingparameters.json";
           Set-AzCurrentStorageAccount -ResourceGroupName ResumeWebsite -Name testresumevastagon;
           Enable-AzStorageStaticWebsite -IndexDocument "resume.html";
           az storage blob upload-batch --account-name testresumevastagon --auth-mode key -d '$web' -s "./resume/Resume Code" --overwrite
