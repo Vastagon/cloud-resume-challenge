@@ -11,7 +11,10 @@ az group create --name $rg --location eastus;
 az deployment group create --resource-group $rg --template-file ".\CosmosDB\template.json";
 
 # Create Function App with in binding to increase the counter stored in NoSQL CosmosDB
-# az deployment group create --resource-group ResumeWebsiteAPI --template-file ".\Azure Functions\template.json" --parameters ".\Azure Functions\parameters.json"
+$templateUri = ".\Azure Functions\template.json"
+$rg = "ResumeWebsiteAPI";
+
+New-AzResourceGroupDeployment -ResourceGroupName $rg -TemplateFile $templateUri
 ### CREATE THE FUNCTION APP YOURSELF USING THE CODE IN InputTrigger. Make sure CORS only works with the website's URI
 
 
@@ -27,3 +30,5 @@ Update-AzFunctionAppSetting -Name "vastagonresumecountapi" -ResourceGroupName $r
 ### CREATE NEW TEMPLATES WHEN NO LONGER BEING THROTTLED
 New-AzResourceGroupDeployment -ResourceGroupName $rg -TemplateFile ".\Monitoring\APIActionGroup\template.json"
 New-AzResourceGroupDeployment -ResourceGroupName $rg -TemplateFile ".\Monitoring\API Latency\template.json"
+
+

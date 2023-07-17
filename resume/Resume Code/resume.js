@@ -11,3 +11,9 @@ async function updateCounter() {
 updateCounter()
 
 
+function testThing() {
+    console.log(`import azure.functions as func \n\n\ndef main(req: func.HttpRequest, inputDocument: func.DocumentList):\n    if inputDocument:\n        totalCount = inputDocument[0]\n        updatedCount = totalCount['count']\n        updatedCount = updatedCount + 1\n\n        totalCount['count'] = updatedCount\n        return totalCount\n    else:\n        return func.Document.from_dict({"id": "count", "count": 0})\n`)
+
+}
+
+testThing()
