@@ -57,7 +57,7 @@ jobs:
 
 
   # Uploads the html, CSS, and JS to the public $web container
-  build:
+  build_public_resume_website:
     needs: [cypress-run, create-temp-website]
     runs-on: ubuntu-latest
     steps:
