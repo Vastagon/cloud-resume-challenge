@@ -53,8 +53,9 @@ $rg = "ResumeWebsite";
 $websiteTestingStorageName = "testresumevastagon";
 az deployment group create --resource-group $rg --template-file ".\Resume Website\Resume Website Storage Account\template.json" --parameters ".\Resume Website\Resume Website Storage Account\testingparameters.json";
 # Enabling static website
-Set-AzCurrentStorageAccount -ResourceGroupName $rg -Name $websiteTestingStorageName;
-Enable-AzStorageStaticWebsite -IndexDocument "resume.html";
+az storage blob service-properties update --account-name $websiteTestingStorageName --static-website --index-document resume.html
+    # Set-AzCurrentStorageAccount -ResourceGroupName $rg -Name $websiteTestingStorageName;
+    # Enable-AzStorageStaticWebsite -IndexDocument "resume.html";
 # Adding files
 az storage blob upload-batch --account-name $websiteTestingStorageName --auth-mode key -d '$web' -s "./resume/Resume Code" --overwrite
 
