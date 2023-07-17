@@ -52,7 +52,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          az storage account delete --name testresumevastagon --resource-group ResumeWebsite
+          az storage account delete --name testresumevastagon --resource-group ResumeWebsite --yes
       
 
 
