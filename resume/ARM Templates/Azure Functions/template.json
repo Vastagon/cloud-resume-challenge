@@ -16,6 +16,18 @@
                 "description": "The name of the function app that you wish to create."
             }
         },
+        "storageAccountName": {
+            "type": "string",
+            "defaultValue": "vastresumefunctionappapi"
+        },
+        "initpy": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "cosmosDBConnectionString": {
+            "type": "string",
+            "defaultValue": ""
+        },
         "sites_vastagonresumecountapi_name": {
             "defaultValue": "vastagonresumecountapi",
             "type": "String"
@@ -83,28 +95,41 @@
                 "name": "Y1",
                 "tier": "Dynamic"
             },
-            "properties": {}
+            "properties": {
+                "perSiteScaling": false,
+                "elasticScaleEnabled": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0,
+                "zoneRedundant": false
+            },
+            "kind": "functionapp"
         },
         {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2021-03-01",
             "name": "[variables('functionAppName')]",
             "location": "[parameters('location')]",
-            "kind": "functionapp",
+            "kind": "functionapp,linux",
             "identity": {
                 "type": "SystemAssigned"
             },
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+                "httpsOnly": true,
                 "siteConfig": {
                     "appSettings": [
                         {
                             "name": "AzureWebJobsStorage",
-                            "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', variables('storageAccountName'), environment().suffixes.storage, listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2022-05-01').keys[0].value)]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
                         },
                         {
                             "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                            "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', variables('storageAccountName'), environment().suffixes.storage, listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2022-05-01').keys[0].value)]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
                         },
                         {
                             "name": "WEBSITE_CONTENTSHARE",
@@ -115,12 +140,17 @@
                             "value": "~4"
                         },
                         {
+                            "name": "cosmosDBConnectionString",
+                            "value": "[parameters('cosmosDBConnectionString')]"
+                        },
+                        {
                             "name": "FUNCTIONS_WORKER_RUNTIME",
                             "value": "[variables('functionWorkerRuntime')]"
                         }
                     ],
                     "ftpsState": "FtpsOnly",
-                    "minTlsVersion": "1.2"
+                    "minTlsVersion": "1.2",
+                    "linuxFxVersion": "Python|3.10"
                 },
                 "httpsOnly": true
             },
@@ -225,6 +255,11 @@
                 "[resourceId('Microsoft.Web/sites', parameters('sites_vastagonresumecountapi_name'))]"
             ],
             "properties": {
+                "files": {
+                    "__init__.py": "[parameters('initpy')]"
+                },
+                "language": "python",
+                "isDisabled": false,
                 "config": {
                     "disabled": false,
                     "bindings": [
@@ -256,9 +291,6 @@
                             "direction": "out"
                         }
                     ]
-                },
-                "files": {
-                    "__init__.py": "import azure.functions as func \n\n\ndef main(req: func.HttpRequest, inputDocument: func.DocumentList):\n    if inputDocument:\n        totalCount = inputDocument[0]\n        updatedCount = totalCount['count']\n        updatedCount = updatedCount + 1\n\n        totalCount['count'] = updatedCount\n        return totalCount\n    else:\n        return func.Document.from_dict({'id': 'count', 'count': 0})\n"
                 }
             },
             "dependsOn": [

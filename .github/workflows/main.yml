@@ -20,6 +20,8 @@ jobs:
           az deployment group create --resource-group ResumeWebsite --template-file "./resume/ARM Templates/Resume Website/Resume Website Storage Account/template.json" --parameters "./resume/ARM Templates/Resume Website/Resume Website Storage Account/testingparameters.json";
           az storage blob service-properties update --account-name testresumevastagon --static-website --index-document resume.html
           az storage blob upload-batch --account-name testresumevastagon --auth-mode key -d '$web' -s "./resume/Resume Code" --overwrite
+          Start-Sleep -Seconds 15
+
 
     - name: Checkout
       uses: actions/checkout@v3
