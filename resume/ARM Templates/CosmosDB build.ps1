@@ -45,18 +45,26 @@ New-AzResourceGroupDeployment -ResourceGroupName $rg -TemplateFile ".\Monitoring
     "__init__.py": "import azure.functions as func \n\n\ndef main(req: func.HttpRequest, inputDocument: func.DocumentList):\n    if inputDocument:\n        totalCount = inputDocument[0]\n        updatedCount = totalCount['count']\n        updatedCount = updatedCount + 1\n\n        totalCount['count'] = updatedCount\n        return totalCount\n    else:\n        return func.Document.from_dict({'id': 'count', 'count': 0})\n"
 }
 
-
+$initpytest = "import azure.functions as func \n\n\ndef main(req: func.HttpRequest, inputDocument: func.DocumentList):\n    if inputDocument:\n        totalCount = inputDocument[0]\n        updatedCount = totalCount['count']\n        updatedCount = updatedCount + 1\n\n        totalCount['count'] = updatedCount\n        return totalCount\n    else:\n        return func.Document.from_dict({'id': 'count', 'count': 0})\n"
 $templateUri = ".\Azure Functions\template.json"
 $rg = "ResumeWebsiteAPI";
 $accountName = "resumecosmosvastagon"
 $FunctionFilePath = "..\..\InputTrigger\__init__.py"
+# $testFile = "import azure.functions as func\n\n    \ndef main(req: func.HttpRequest, inputDocument: func.DocumentList):\n    if inputDocument:\n        totalCount = inputDocument[0]\n        updatedCount = totalCount['count']\n        updatedCount = updatedCount + 1\n\n        totalCount['count'] = updatedCount\n        return totalCount\n    else:\n        return func.Document.from_dict({ "id": "count", "count": 0 })\n"
 
+$finalVar = ""
 # Get the content for the function
 $FunctionFileContent = Get-Content -Path $FunctionFilePath
+foreach($line in $FunctionFileContent){
+    $finalVar = $finalVar + $line + "`r`n"
+}
+Write-Output $finalVar
+# Write-Output "import azure.functions as func \n\n\ndef main(req: func.HttpRequest, inputDocument: func.DocumentList):\n    if inputDocument:\n        totalCount = inputDocument[0]\n        updatedCount = totalCount['count']\n        updatedCount = updatedCount + 1\n\n        totalCount['count'] = updatedCount\n        return totalCount\n    else:\n        return func.Document.from_dict({'id': 'count', 'count': 0})\n"
+
 # Get connection string
 $cosmosDBConnectionString = (Get-AzCosmosDBAccountKey -ResourceGroupName $rg -Name $accountName -Type "ConnectionStrings")."Primary SQL Connection String"
 # Deploy the Function app
-az deployment group create --subscription "Pay as you go Production" --resource-group $rg --template-file $templateUri --parameters initpy=$FunctionFileContent cosmosDBConnectionString=$cosmosDBConnectionString
+az deployment group create --subscription "Pay as you go Production" --resource-group $rg --template-file $templateUri --parameters initpy=$finalVar cosmosDBConnectionString=$cosmosDBConnectionString
 
 
 
@@ -71,10 +79,9 @@ az deployment group create --subscription "Pay as you go Production" --resource-
 ## MIGHT BE ABLE TO CREATE A FOREACH THAT ADDS \n TO EACH LINE
 
 
-
+import azure.functions as func\n\n    \ndef main(req: func.HttpRequest, inputDocument: func.DocumentList):\n    if inputDocument:\n        totalCount = inputDocument[0]\n        updatedCount = totalCount['count']\n        updatedCount = updatedCount + 1\n\n        totalCount['count'] = updatedCount\n        return totalCount\n    else:\n        return func.Document.from_dict({ "id": "count", "count": 0 })\n
 
 import azure.functions as func \n\n\ndef main(req: func.HttpRequest, inputDocument: func.DocumentList):\n    if inputDocument:\n        totalCount = inputDocument[0]\n        updatedCount = totalCount['count']\n        updatedCount = updatedCount + 1\n\n        totalCount['count'] = updatedCount\n        return totalCount\n    else:\n        return func.Document.from_dict({ 'id': 'count', 'count': 0 })\n
-
 
 
 
